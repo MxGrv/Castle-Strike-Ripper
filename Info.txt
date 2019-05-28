@@ -1,0 +1,56 @@
+Castle Strike Ripper
+
+This tiny application is a ripper of ".rda" pseudo-archives, used in the "Castle Stike" game (release: ~ 2004 A.D.) by Data Becker & Related Designs.
+
+Disclaimer:
+Contents of the pseudo-archives stated belong to the owners (creators, editors, legal distributors and so on) of the "Castle Strike" game and is protected by the international laws!
+This application MUST be used for EDUCATIONAL purposes only!
+Piracy is a crime, so YOU MUST NOT by any means copy, distribute, sell, or gain any commercial benefit from any of the "Castle Strike" game files!
+I do not carry any responsibility for what you do with the files, extracted from the "Castle Strike" game pseudo-arhives.
+
+There are 14 pseudo-archive files, named as "csp0.rda" through "csp13.rda". Their contents is approximately as follows:
+0. Configuration and details [all compressed]
+1. 3D graphics and animation with textures [all compressed]
+2. 3D graphics and animation with textures [all compressed]
+3. Textures left and fonts [some compressed, some not]
+4. 3D animation [all compressed]
+5. Effects and menu components [all compressed]
+6. Some objects named as "kimodules" [all compressed]
+7. Level designs for singleplayer mode [all compresed]
+8. Level designs for multiplayer mode [all compressed]
+9. Sounds for units and buildings selection [all non-compressed]
+10. Story-mode characters taunts [all non-compressed]
+11. Auxiliary text data [all compressed]
+12. Ambient music and characters' music themes [all non-compressed]
+13. The rest of all (inc. level designs) [all compressed]
+
+Pseudo-archives structure:
+1. The pseudo-archive includes:
+- the fixed header,
+- the table of file records, and
+- the file records themselves.
+The file records follow each other without any delimiters, and are identified with the file offset and file size (which are set in the corresponding file records). The file record also contains several flags, including the zipping flag (which denotes whether or not the file represented has been zipped before inserting in the pseudo-archive).
+The compressed files, being zipped files, have the 0x789C signature. Of course, "pure media" files (sounds and music) are not compressed.
+2. The header is a sequence of bytes with ASCII-encoded "Resource File V1.1" string, followed by zeroes up to offset 0x100 (to form the first 256 bytes of the pseudo-archive file).
+3. The table of file records begins with the word (2 bytes), which contains the amount of file records, and contains file records one-by-one.
+4. The file record structure is (4-byte DWORDs are little-endian):
+- [up to 256 bytes length] relative file path;
+- [4 bytes] file offset (absolute, i.e., from the very beginning of the archive, from 0x0);
+- [4 bytes] file size;
+- [4 bytes] genuine file size (if the file is non-compressed, this field has the same value as the previous one, otherwise it is either smaller (for large enough files), or larger (for small enough files) - just as the zipping is supposed to behave);
+- [4 bytes] flags;
+- [4 bytes] timestamp (usual UNIX timestamp format, as the values are really close).
+The flags field has either the value of 4, or the value of 5; the value of 5 denotes a zipped file, while the value of 4 denotes a non-zipped file.
+
+Usage:
+1. Compile it and put the executable to the target directory.
+2. Download the "offzip" console application and put "offzip.exe" to the target directory.
+3. Edit (I hope you know how to edit the .bat scripts, don't you?...) the "unzip_lazy.bat" script accordingly to the input and output directories required, and run it.
+4. Enjoy: all extracted unzipped files are named normally, extracted zipped files are name as <file_name>.zipped.<file_ext>, extracted and aggregated by the offzip utility files are named as <file_name>.zipped.unzipped.<file_extension>.
+
+Notes (realization):
+1. The current project state is: UNSUPPORTED (sorry, but I'm too lazy, and it's not that hard anyway).
+2. The Miniz library is what should should have been integrated in the project, but I was too lazy and used the "offzip" console application with a script to unzip the extracted data.
+3. Some files after unzipping may have no contents, which is OK (somebody was too lazy to remove the extra (or at least not needed any more, or debug) data, just like me, lol).
+4. The "unzip_lazy.bat" script is awful, but I'm still that lazy to change it or to move to Python.
+5. This is probably an awful way of writing applications, but I think it's allright (just because there is just one C++ file)!
